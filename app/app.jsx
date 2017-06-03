@@ -11,7 +11,7 @@ $(document).foundation();
 require('style!css!sass!applicationStyles')
 
 
-ReactDOM.render(
-  <p>Boilerplate3 Project</p>,
-  document.getElementById('app')
-);
+
+
+//require('./redux-example.jsx');
+require('./redux-todo-example.jsx');
