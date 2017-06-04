@@ -13,7 +13,7 @@ var nextMovieId = 1;
 // It is Pure Function
 // It is reducer
 // if there is no state then it is Anonymous
-var reducer = (state = stateDefault, action) => {
+var oldReducer = (state = stateDefault, action) => {
 
     switch(action.type) {
       case 'CHANGE_NAME':
@@ -64,6 +64,55 @@ var reducer = (state = stateDefault, action) => {
     }
 
 };
+
+var  nameReducer = (state = 'Anonymous', action) => {
+      switch(action.type) {
+        case 'CHANGE_NAME':
+              return action.name;
+        default: return state;
+      };
+};
+
+
+var hobbiesReducer = (state = [], action) => {
+    switch(action.type) {
+      case 'ADD_HOBBY':
+            return [
+              ...state,
+                {
+                  id: nextHobbyId++,
+                  hobby: action.hobby
+                }
+            ];
+      case 'REMOVE_HOBBY':
+              return state.filter((hobby) => hobby.id !== action.id);
+        default: return state;
+    }
+}
+
+
+  var moviesReducer = (state = [], action) => {
+      switch(action.type) {
+        case 'ADD_MOVIE':
+              return [
+                ...state,
+                {
+                  id: nextMovieId++,
+                  title: action.title,
+                  genre: action.genre
+                }
+              ];
+        case 'REMOVE_MOVIE':
+              return state.filter((movie) => movie.id !== action.id);
+        default: return state;
+      }
+  }
+var reducer = redux.combineReducers({
+  name: nameReducer,
+  hobbies: hobbiesReducer,
+  movies: moviesReducer
+});
+
 var store = redux.createStore(reducer, redux.compose(
   window.devToolsExtension? window.devToolsExtension(): f => f
 ));
