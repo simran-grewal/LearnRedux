@@ -2,69 +2,8 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-};
-
-var nextHobbyId = 1;
-var nextMovieId = 1;
-// It is Pure Function
-// It is reducer
-// if there is no state then it is Anonymous
-var oldReducer = (state = stateDefault, action) => {
-
-    switch(action.type) {
-      case 'CHANGE_NAME':
-          return {
-            ...state,
-            name: action.name
-          };
-      case 'ADD_HOBBY':
-            return {
-              ...state,
-              hobbies: [
-                ...state.hobbies,
-                {
-                  id: nextHobbyId++,
-                  hobby: action.hobby
-                }
-              ]
-            };
-
-      case 'ADD_MOVIE':
-            return {
-              ...state,
-              movies: [
-                ...state.movies,
-                {
-                  id: nextMovieId++,
-                  title: action.title,
-                  genre: action.genere
-                }
-              ]
-            }
-      case 'REMOVE_HOBBY' :
-            return {
-              ...state,
-              hobbies:
-              state.hobbies.filter((hobby) => {
-                return hobby.id !== action.id;
-              })
-            }
-      case 'REMOVE_MOVIE' :
-            return {
-              ...state,
-              movies: state.movies.filter(movie => movie.id !== action.id)
-
-            }
-
-      default: return state;
-    }
-
-};
-
+// Name Reducer and action generator
+//----------------------------------
 var  nameReducer = (state = 'Anonymous', action) => {
       switch(action.type) {
         case 'CHANGE_NAME':
@@ -73,7 +12,16 @@ var  nameReducer = (state = 'Anonymous', action) => {
       };
 };
 
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+}
 
+// Hobby Reducer and action generator
+//-------------------------------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
     switch(action.type) {
       case 'ADD_HOBBY':
@@ -90,7 +38,24 @@ var hobbiesReducer = (state = [], action) => {
     }
 }
 
+// add hobby action generator
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  }
+}
 
+// remove movie action generator
+var removeHobby = (id) => {
+    return {
+      type: 'REMOVE_HOBBY',
+      id
+    }
+}
+// Movie Reducer and action generator
+//----------------------------------
+  var nextMovieId = 1;
   var moviesReducer = (state = [], action) => {
       switch(action.type) {
         case 'ADD_MOVIE':
@@ -105,6 +70,22 @@ var hobbiesReducer = (state = [], action) => {
         case 'REMOVE_MOVIE':
               return state.filter((movie) => movie.id !== action.id);
         default: return state;
+      }
+  }
+
+// add  movie action generator
+  var addMovie = (title, genre) => {
+      return {
+        type: 'ADD_MOVIE',
+        title,
+        genre
+      }
+  }
+// remove movie action generator
+  var removeMovie = (id) => {
+      return {
+        type: 'REMOVE_MOVIE',
+        id
       }
   }
 var reducer = redux.combineReducers({
@@ -133,42 +114,16 @@ store.subscribe(() => {
 var currentState = store.getState();
 console.log('Current State', currentState);
 
-store.dispatch({
-    type: 'CHANGE_NAME',
-    name: 'Simran'
-});
+store.dispatch(changeName('simran'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'playing piano'
-});
+store.dispatch(addHobby('playing piano'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'playing Keyboard'
-});
+store.dispatch(addHobby('playing keyboard'));
 
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-});
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Grewal'
-});
+store.dispatch(removeHobby(2));
+store.dispatch(changeName('Grewal'));
 
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Hero',
-  genre: 'Action'
-});
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Love',
-  genre: 'Romantic'
-});
+store.dispatch(addMovie('Hero', 'Action'));
+store.dispatch(addMovie('Love', 'Romantic'));
 
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 1
-});
+store.dispatch(removeMovie(1));
